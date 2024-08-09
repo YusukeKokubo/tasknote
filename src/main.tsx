@@ -1,12 +1,14 @@
+import { initializeApp } from "firebase/app"
+import "firebase/auth"
 import React from "react"
 import ReactDOM from "react-dom/client"
-import App from "./App.tsx"
-import "./index.css"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import Layout from "./components/Layout.tsx"
+import App from "./App.tsx"
 import About from "./components/About.tsx"
 import AboutA from "./components/AboutA.tsx"
 import Event from "./components/Event.tsx"
+import Layout from "./components/Layout.tsx"
+import "./index.css"
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,18 @@ const router = createBrowserRouter([
     ],
   },
 ])
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
+}
+
+export const firebaseApp = initializeApp(firebaseConfig)
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
