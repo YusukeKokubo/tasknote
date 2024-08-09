@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Layout from "./components/Layout.tsx"
 import About from "./components/About.tsx"
 import AboutA from "./components/AboutA.tsx"
+import Event from "./components/Event.tsx"
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
             element: <AboutA />,
           },
         ],
+      },
+      {
+        path: "event/:id",
+        element: <Event />,
       },
     ],
   },
