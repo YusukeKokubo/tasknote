@@ -51,8 +51,11 @@ function Layout() {
         ) : (
           <button onClick={signIn}>Signin</button>
         )}
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
       </div>
-      <Outlet />
+      <Outlet context={{ headerCount: count }} />
     </>
   )
 }

@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { Outlet } from "react-router-dom"
+import { Outlet, useOutletContext } from "react-router-dom"
 
 function About() {
-  const [count, setCount] = useState(0)
+  const { headerCount } = useOutletContext<{ headerCount: number }>()
+  const [count, setCount] = useState(headerCount)
   return (
     <div>
       about
