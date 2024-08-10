@@ -2,11 +2,13 @@ import { FirebaseError } from "firebase/app"
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom"
+import { css } from "@/styled-system/css"
 
 function Layout() {
   const navigate = useNavigate()
   const auth = getAuth()
   const [currentUser, setCurrentUser] = useState(auth.currentUser)
+  const [count, setCount] = useState(0)
 
   const provider = new GoogleAuthProvider()
   const signIn = () => {
@@ -37,7 +39,7 @@ function Layout() {
 
   return (
     <>
-      <div className="Header">
+      <div className={css({ display: "flex", gap: 4 })}>
         <button onClick={() => navigate("/")}>home</button>
         <button onClick={() => navigate("/about/a")}>about/a</button>
         <button onClick={() => navigate("/event/100")}>event</button>

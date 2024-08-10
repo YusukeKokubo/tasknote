@@ -8,7 +8,7 @@ import About from "./components/About.tsx"
 import AboutA from "./components/AboutA.tsx"
 import Event from "./components/Event.tsx"
 import Layout from "./components/Layout.tsx"
-import "./index.css"
+import "@/styled-system/styles.css"
 
 const router = createBrowserRouter([
   {
