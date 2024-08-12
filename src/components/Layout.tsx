@@ -43,6 +43,7 @@ function Layout() {
         <button onClick={() => navigate("/")}>home</button>
         <button onClick={() => navigate("/about/a")}>about/a</button>
         <button onClick={() => navigate("/event/100")}>event</button>
+        <button onClick={() => navigate("/user")}>user</button>
         {currentUser ? (
           <div>
             <span>{currentUser.displayName}</span>

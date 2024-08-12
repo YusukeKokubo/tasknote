@@ -9,6 +9,9 @@ import AboutA from "./components/AboutA.tsx"
 import Event from "./components/Event.tsx"
 import Layout from "./components/Layout.tsx"
 import "@/styled-system/styles.css"
+import UserPage from "./components/User.tsx"
+import { connectAuthEmulator, getAuth } from "firebase/auth"
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore"
 
 const router = createBrowserRouter([
   {
@@ -33,6 +36,10 @@ const router = createBrowserRouter([
         path: "event/:id",
         element: <Event />,
       },
+      {
+        path: "user",
+        element: <UserPage />,
+      },
     ],
   },
 ])
@@ -47,7 +54,16 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 }
 
-export const firebaseApp = initializeApp(firebaseConfig)
+const firebase = initializeApp(firebaseConfig)
+const auth = getAuth()
+const db = getFirestore()
+
+if (import.meta.env.MODE === "development") {
+  connectAuthEmulator(auth, "http://localhost:9099")
+  connectFirestoreEmulator(db, "localhost", 8080)
+}
+
+export { firebase, auth, db }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
