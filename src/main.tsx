@@ -9,9 +9,10 @@ import AboutA from "./components/AboutA.tsx"
 import Event from "./components/Event.tsx"
 import Layout from "./components/Layout.tsx"
 import "@/styled-system/styles.css"
-import UserPage from "./components/User.tsx"
+import IssuesPage from "./components/IssuesPage.tsx"
 import { connectAuthEmulator, getAuth } from "firebase/auth"
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore"
+import IssuePage from "./components/IssuePage.tsx"
 
 const router = createBrowserRouter([
   {
@@ -37,8 +38,12 @@ const router = createBrowserRouter([
         element: <Event />,
       },
       {
-        path: "user",
-        element: <UserPage />,
+        path: "issues",
+        element: <IssuesPage />,
+      },
+      {
+        path: "issues/:id",
+        element: <IssuePage />,
       },
     ],
   },
