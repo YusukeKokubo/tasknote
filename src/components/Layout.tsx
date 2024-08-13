@@ -39,7 +39,7 @@ function Layout() {
 
   return (
     <>
-      <div className={css({ display: "flex", gap: 4 })}>
+      <div className="flex gap-2">
         <button onClick={() => navigate("/")}>home</button>
         <button onClick={() => navigate("/about/a")}>about/a</button>
         <button onClick={() => navigate("/event/100")}>event</button>

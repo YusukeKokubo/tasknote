@@ -1,5 +1,4 @@
 import { useIssues } from "@/firebase/getIssues"
-import { css } from "@/styled-system/css"
 import { useNavigate } from "react-router-dom"
 
 function IssuesPage() {
@@ -11,7 +10,7 @@ function IssuesPage() {
   ) : (
     <div>
       <h1>User Page</h1>
-      <table className={css({ border: "1px" })}>
+      <table className="border">
         <tbody>
           <tr>
             <th>id</th>

@@ -3,9 +3,8 @@ import { useParams } from "react-router-dom"
 
 function IssuePage() {
   const { id } = useParams()
-  console.log(id)
   const { data: issue, isLoading, error } = useIssue(id)
-  console.log(error)
+  error && console.error(error)
 
   return isLoading || !issue ? (
     <div>Loading...</div>
