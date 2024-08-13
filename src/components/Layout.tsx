@@ -2,7 +2,6 @@ import { FirebaseError } from "firebase/app"
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom"
-import { css } from "@/styled-system/css"
 
 function Layout() {
   const navigate = useNavigate()
