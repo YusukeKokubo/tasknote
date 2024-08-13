@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app"
 import "firebase/auth"
 import React from "react"
 import ReactDOM from "react-dom/client"
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import App from "./App.tsx"
 import About from "./components/About.tsx"
 import AboutA from "./components/AboutA.tsx"
@@ -38,11 +38,17 @@ const router = createBrowserRouter([
       },
       {
         path: "issues",
-        element: <IssuesPage />,
-      },
-      {
-        path: "issues/:id",
-        element: <IssuePage />,
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            element: <IssuesPage />,
+          },
+          {
+            path: ":id",
+            element: <IssuePage />,
+          }
+        ]
       },
     ],
   },
