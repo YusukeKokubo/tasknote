@@ -11,7 +11,6 @@ export const timestampToDate = (timestamp: Timestamp) => {
 };
 
 export const formatDoc = (doc: QueryDocumentSnapshot<DocumentData>) => {
-	console.log('foramtDoc', doc)
 	const data = doc.data();
 	const formatedData = { uid: doc.id, ...data } as any;
 

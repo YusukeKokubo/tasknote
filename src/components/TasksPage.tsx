@@ -1,55 +1,94 @@
-import { saveTask, TaskData, useTasks } from "@/firebase/useTask"
+import {
+  createNewTask,
+  doneTask,
+  Task,
+  TaskData,
+  TaskDoneData,
+  useTasks,
+} from "@/firebase/useTask"
 import { useState } from "react"
+import { Button } from "./ui/button"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table"
+import { Input } from "./ui/input"
+import { Checkbox } from "./ui/checkbox"
 
 function TasksPage() {
   const { data: tasks, isLoading } = useTasks()
 
   const [title, setTitle] = useState("")
 
-  const addTask = (title: string) => {
+  const add = (title: string) => {
     console.log("Add task")
     const taskData: TaskData = { title }
-    saveTask(taskData)
+    createNewTask(taskData)
     setTitle("")
+  }
+
+  const done = (task: Task) => {
+    console.log("Done task")
+    const taskData: TaskDoneData = { uid: task.uid, doneAt: new Date() }
+    doneTask(taskData)
+  }
+  const undone = (task: Task) => {
+    console.log("Undone task")
+    const taskData: TaskDoneData = { uid: task.uid, doneAt: null }
+    doneTask(taskData)
   }
 
   return isLoading || !tasks ? (
     <div>Loading...</div>
   ) : (
-    <div>
-      <h1>Tasks</h1>
-      <table className="border">
-        <tbody>
-          <tr>
-            <th>title</th>
-          </tr>
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead></TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {tasks.map((task) => (
-            <tr key={task.uid}>
-              <td>{task.title}</td>
-            </tr>
+            <TableRow key={task.uid}>
+              <TableCell>{task.title}</TableCell>
+              <TableCell>
+                <Checkbox
+                  checked={!!task.doneAt}
+                  onCheckedChange={(checked) => {
+                    checked ? done(task) : undone(task)
+                  }}
+                />
+              </TableCell>
+            </TableRow>
           ))}
-          <tr>
-            <td>
-              <input
+          <TableRow>
+            <TableCell className="p-1">
+              <Input
                 type="text"
                 name="title"
                 value={title}
                 onChange={(value) => setTitle(value.target.value)}
               />
-            </td>
-            <td>
-              <button
+            </TableCell>
+            <TableCell>
+              <Button
                 onClick={() => {
-                  addTask(title)
+                  add(title)
                 }}
               >
                 Add
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              </Button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </>
   )
 }
 
