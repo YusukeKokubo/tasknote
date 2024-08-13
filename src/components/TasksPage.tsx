@@ -1,15 +1,13 @@
-import { useIssues } from "@/firebase/getIssues"
-import { useNavigate } from "react-router-dom"
+import { useTasks } from "@/firebase/useTask"
 
 function IssuesPage() {
-  const { data: issues, isLoading } = useIssues()
-  const navigate = useNavigate()
+  const { data: issues, isLoading } = useTasks()
 
   return isLoading || !issues ? (
     <div>Loading...</div>
   ) : (
     <div>
-      <h1>User Page</h1>
+      <h1>Tasks</h1>
       <table className="border">
         <tbody>
           <tr>
@@ -20,17 +18,17 @@ function IssuesPage() {
             <tr key={issue.uid}>
               <td>{issue.uid}</td>
               <td>{issue.title}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    navigate(`/issues/${issue.uid}`)
-                  }}
-                >
-                  Detail
-                </button>
-              </td>
             </tr>
           ))}
+          <tr>
+            <td></td>
+            <td>
+              <input type="text" />
+            </td>
+            <td>
+              <button>Add</button>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

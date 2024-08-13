@@ -1,13 +1,11 @@
+import { auth } from "@/main"
 import { FirebaseError } from "firebase/app"
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
-import { useState } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import { useEffect, useState } from "react"
+import { Outlet } from "react-router-dom"
 
 function Layout() {
-  const navigate = useNavigate()
-  const auth = getAuth()
   const [currentUser, setCurrentUser] = useState(auth.currentUser)
-  const [count, setCount] = useState(0)
 
   const provider = new GoogleAuthProvider()
   const signIn = () => {
@@ -36,13 +34,17 @@ function Layout() {
       })
   }
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setCurrentUser(user)
+    })
+
+    return unsubscribe
+  }, [])
+
   return (
     <>
       <div className="flex gap-2">
-        <button onClick={() => navigate("/")}>home</button>
-        <button onClick={() => navigate("/about/a")}>about/a</button>
-        <button onClick={() => navigate("/event/100")}>event</button>
-        <button onClick={() => navigate("/issues")}>issues</button>
         {currentUser ? (
           <div>
             <span>{currentUser.displayName}</span>
@@ -51,11 +53,8 @@ function Layout() {
         ) : (
           <button onClick={signIn}>Signin</button>
         )}
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
       </div>
-      <Outlet context={{ headerCount: count }} />
+      <Outlet />
     </>
   )
 }

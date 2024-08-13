@@ -1,17 +1,12 @@
 import { initializeApp } from "firebase/app"
 import "firebase/auth"
-import React from "react"
-import ReactDOM from "react-dom/client"
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
-import App from "./App.tsx"
-import About from "./components/About.tsx"
-import AboutA from "./components/AboutA.tsx"
-import Event from "./components/Event.tsx"
-import Layout from "./components/Layout.tsx"
-import IssuesPage from "./components/IssuesPage.tsx"
 import { connectAuthEmulator, getAuth } from "firebase/auth"
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore"
-import IssuePage from "./components/IssuePage.tsx"
+import React from "react"
+import ReactDOM from "react-dom/client"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import Layout from "./components/Layout.tsx"
+import IssuesPage from "./components/TasksPage.tsx"
 
 const router = createBrowserRouter([
   {
@@ -20,35 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <App />,
-      },
-      {
-        path: "about",
-        element: <About />,
-        children: [
-          {
-            path: "a",
-            element: <AboutA />,
-          },
-        ],
-      },
-      {
-        path: "event/:id",
-        element: <Event />,
-      },
-      {
-        path: "issues",
-        element: <Outlet />,
-        children: [
-          {
-            index: true,
-            element: <IssuesPage />,
-          },
-          {
-            path: ":id",
-            element: <IssuePage />,
-          }
-        ]
+        element: <IssuesPage />,
       },
     ],
   },
@@ -73,7 +40,7 @@ if (import.meta.env.MODE === "development") {
   connectFirestoreEmulator(db, "localhost", 8080)
 }
 
-export { firebase, auth, db }
+export { auth, db, firebase }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
