@@ -43,19 +43,19 @@ function Layout() {
   }, [])
 
   return (
-    <>
-      <div className="flex gap-2">
+    <div className="p-8">
+      <>
         {currentUser ? (
-          <div>
+          <div className="flex gap-2">
             <span>{currentUser.displayName}</span>
             <button onClick={signOut}>Signout</button>
           </div>
         ) : (
           <button onClick={signIn}>Signin</button>
         )}
-      </div>
+      </>
       <Outlet />
-    </>
+    </div>
   )
 }
 

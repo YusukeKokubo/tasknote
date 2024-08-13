@@ -1,9 +1,19 @@
-import { useTasks } from "@/firebase/useTask"
+import { saveTask, TaskData, useTasks } from "@/firebase/useTask"
+import { useState } from "react"
 
-function IssuesPage() {
-  const { data: issues, isLoading } = useTasks()
+function TasksPage() {
+  const { data: tasks, isLoading } = useTasks()
 
-  return isLoading || !issues ? (
+  const [title, setTitle] = useState("")
+
+  const addTask = (title: string) => {
+    console.log("Add task")
+    const taskData: TaskData = { title }
+    saveTask(taskData)
+    setTitle("")
+  }
+
+  return isLoading || !tasks ? (
     <div>Loading...</div>
   ) : (
     <div>
@@ -11,22 +21,30 @@ function IssuesPage() {
       <table className="border">
         <tbody>
           <tr>
-            <th>id</th>
             <th>title</th>
           </tr>
-          {issues.map((issue) => (
-            <tr key={issue.uid}>
-              <td>{issue.uid}</td>
-              <td>{issue.title}</td>
+          {tasks.map((task) => (
+            <tr key={task.uid}>
+              <td>{task.title}</td>
             </tr>
           ))}
           <tr>
-            <td></td>
             <td>
-              <input type="text" />
+              <input
+                type="text"
+                name="title"
+                value={title}
+                onChange={(value) => setTitle(value.target.value)}
+              />
             </td>
             <td>
-              <button>Add</button>
+              <button
+                onClick={() => {
+                  addTask(title)
+                }}
+              >
+                Add
+              </button>
             </td>
           </tr>
         </tbody>
@@ -35,4 +53,4 @@ function IssuesPage() {
   )
 }
 
-export default IssuesPage
+export default TasksPage

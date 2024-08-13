@@ -6,7 +6,8 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Layout from "./components/Layout.tsx"
-import IssuesPage from "./components/TasksPage.tsx"
+import TasksPage from "./components/TasksPage.tsx"
+import './index.css'
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <IssuesPage />,
+        element: <TasksPage />,
       },
     ],
   },
