@@ -3,6 +3,7 @@ import { FirebaseError } from "firebase/app"
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { useEffect, useState } from "react"
 import { Outlet } from "react-router-dom"
+import { Button } from "./ui/button"
 
 function Layout() {
   const [currentUser, setCurrentUser] = useState(auth.currentUser)
@@ -43,15 +44,17 @@ function Layout() {
   }, [])
 
   return (
-    <div className="p-8">
+    <div className="p-8 flex flex-col gap-4">
       <>
         {currentUser ? (
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <span>{currentUser.displayName}</span>
-            <button onClick={signOut}>Signout</button>
+            <Button variant="ghost" onClick={signOut}>
+              Signout
+            </Button>
           </div>
         ) : (
-          <button onClick={signIn}>Signin</button>
+          <Button onClick={signIn}>Signin</Button>
         )}
       </>
       <Outlet />

@@ -1,4 +1,5 @@
 import {
+  archiveDoneTasks,
   createNewTask,
   doneTask,
   Task,
@@ -38,11 +39,18 @@ function TasksPage() {
   const undone = (task: Task) => {
     undoneTask({ uid: task.uid })
   }
+  const archive = () => {
+    const doneTasks = tasks?.filter((task) => !!task.doneAt)
+    doneTasks && archiveDoneTasks(doneTasks)
+  }
 
   return isLoading || !tasks ? (
     <div>Loading...</div>
   ) : (
     <>
+      {tasks.some((task) => !!task.doneAt) && (
+        <Button onClick={() => archive()}>Archive done tasks</Button>
+      )}
       <Table>
         <TableHeader>
           <TableRow>
