@@ -1,5 +1,5 @@
 import { db } from "@/main";
-import { collection, doc, query, serverTimestamp, setDoc } from "firebase/firestore";
+import { collection, doc, orderBy, query, serverTimestamp, setDoc } from "firebase/firestore";
 import { useFirestore } from "./useFirestore";
 
 export type Task = { uid: string, userId: string, title: string, description: string, doneAt: Date | null, order: number };
@@ -13,9 +13,7 @@ export const useTask = (uid: string | undefined) => {
 };
 
 export const useTasks = () => {
-
-	const tasks = useFirestore<Task[]>(query(collection(db, 'task')));
-
+	const tasks = useFirestore<Task[]>(query(collection(db, 'task'), orderBy('createdAt', 'asc')));
 	return tasks;
 }
 
