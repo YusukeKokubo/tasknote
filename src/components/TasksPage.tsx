@@ -48,14 +48,11 @@ function TasksPage() {
     <div>Loading...</div>
   ) : (
     <>
-      {tasks.some((task) => !!task.doneAt) && (
-        <Button onClick={() => archive()}>Archive done tasks</Button>
-      )}
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead></TableHead>
-            <TableHead></TableHead>
+            <TableHead className="w-1">Done</TableHead>
+            <TableHead>Title</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -83,6 +80,16 @@ function TasksPage() {
               <TableCell></TableCell>
             </TableRow>
           ))}
+          {tasks.some((task) => !!task.doneAt) && (
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>
+                <Button variant="destructive" onClick={() => archive()}>
+                  Archive done tasks
+                </Button>
+              </TableCell>
+            </TableRow>
+          )}
           <TableRow>
             <TableCell></TableCell>
             <TableCell className="p-1">
