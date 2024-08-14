@@ -4,10 +4,14 @@ import {
   doneTask,
   Task,
   TaskData,
+  TaskUpdateData,
   undoneTask,
+  updateTask,
   useTasks,
 } from "@/firebase/useTask"
 import { useState } from "react"
+import { useOutletContext } from "react-router-dom"
+import { LayoutOutletContext } from "./Layout"
 import { Button } from "./ui/button"
 import { Checkbox } from "./ui/checkbox"
 import { Input } from "./ui/input"
@@ -19,9 +23,6 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table"
-import clsx from "clsx"
-import { useOutletContext } from "react-router-dom"
-import { LayoutOutletContext } from "./Layout"
 
 function TasksPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
@@ -36,6 +37,11 @@ function TasksPage() {
     setTitle("")
   }
 
+  const update = (uid: string, title: string) => {
+    const taskData: TaskUpdateData = { uid, title }
+    updateTask(taskData)
+  }
+
   const done = (task: Task) => {
     doneTask({ uid: task.uid })
   }
@@ -47,10 +53,57 @@ function TasksPage() {
     doneTasks && archiveDoneTasks(doneTasks)
   }
 
+  const TaskRow: React.FC<{ task: Task }> = (props) => {
+    const task = props.task
+    const [editingTitle, setEditingTitle] = useState(task.title)
+    return (
+      <TableRow key={task.uid}>
+        <TableCell>
+          <Checkbox
+            checked={!!task.doneAt}
+            onCheckedChange={(checked) => {
+              checked ? done(task) : undone(task)
+            }}
+            form={`TaskForm-${task.uid}`}
+          />
+        </TableCell>
+        <TableCell>
+          {task.doneAt ? (
+            <span className="line-through text-gray-500 text-lg">
+              {task.title}
+            </span>
+          ) : (
+            <Input
+              type="text"
+              name="title"
+              value={editingTitle}
+              form={`TaskForm-${task.uid}`}
+              onChange={(value) => {
+                setEditingTitle(value.target.value)
+              }}
+            />
+          )}
+          {isDebug && <span>[{task.uid}]</span>}
+        </TableCell>
+        <TableCell>
+          {task.title !== editingTitle && (
+            <Button
+              onClick={() => {
+                update(task.uid, editingTitle)
+              }}
+            >
+              Update
+            </Button>
+          )}
+        </TableCell>
+      </TableRow>
+    )
+  }
+
   return isLoading || !tasks ? (
     <div>Loading...</div>
   ) : (
-    <form>
+    <>
       <Table>
         <TableHeader>
           <TableRow>
@@ -61,28 +114,7 @@ function TasksPage() {
         </TableHeader>
         <TableBody>
           {tasks.map((task) => (
-            <TableRow key={task.uid}>
-              <TableCell>
-                <Checkbox
-                  checked={!!task.doneAt}
-                  onCheckedChange={(checked) => {
-                    checked ? done(task) : undone(task)
-                  }}
-                />
-              </TableCell>
-              <TableCell>
-                <span
-                  className={clsx(
-                    task.doneAt && "line-through text-gray-500",
-                    "text-lg"
-                  )}
-                >
-                  {task.title}
-                </span>
-                {isDebug && <span>[{task.uid}]</span>}
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
+            <TaskRow task={task} key={task.uid} />
           ))}
           {tasks.some((task) => !!task.doneAt) && (
             <TableRow>
@@ -101,11 +133,13 @@ function TasksPage() {
                 type="text"
                 name="title"
                 value={title}
+                form="NewTaskForm"
                 onChange={(value) => setTitle(value.target.value)}
               />
             </TableCell>
             <TableCell>
               <Button
+                form="NewTaskForm"
                 onClick={() => {
                   add(title)
                 }}
@@ -117,7 +151,11 @@ function TasksPage() {
           </TableRow>
         </TableBody>
       </Table>
-    </form>
+      {tasks.map((task) => (
+        <form key={task.uid} id={`TaskForm-${task.uid}`}></form>
+      ))}
+      <form id="NewTaskForm"></form>
+    </>
   )
 }
 

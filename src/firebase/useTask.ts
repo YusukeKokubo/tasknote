@@ -4,6 +4,7 @@ import { useFirestore } from "./useFirestore";
 
 export type Task = { uid: string, userId: string, title: string, description: string, doneAt: Date | null, order: number };
 export type TaskData = Pick<Task, 'title'>
+export type TaskUpdateData = Pick<Task, 'uid' | 'title'>
 export type TaskDoneData = Pick<Task, 'uid'>
 
 export const useTask = (uid: string | undefined) => {
@@ -21,6 +22,11 @@ export const createNewTask = async (task: TaskData) => {
 	console.log('Save task', task);
 	const taskRef = doc(collection(db, 'task'));
 	setDoc(taskRef, { ...task, userId: auth.currentUser?.uid, archivedAt: null, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+}
+
+export const updateTask = async (task: TaskUpdateData) => {
+	const taskRef = doc(collection(db, 'task'), task.uid);
+	setDoc(taskRef, { ...task, updatedAt: serverTimestamp() }, { merge: true });
 }
 
 export const doneTask = async (task: TaskDoneData) => {
