@@ -113,7 +113,7 @@ function TasksPage() {
           <TableRow>
             <TableHead className="w-1">Done</TableHead>
             <TableHead>Title</TableHead>
-            <TableHead></TableHead>
+            <TableHead className="w-1"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
