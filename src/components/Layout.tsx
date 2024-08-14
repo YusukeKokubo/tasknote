@@ -4,9 +4,15 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { useEffect, useState } from "react"
 import { Outlet } from "react-router-dom"
 import { Button } from "./ui/button"
+import { Switch } from "./ui/switch"
+
+export type LayoutOutletContext = {
+  isDebug: boolean
+}
 
 function Layout() {
   const [currentUser, setCurrentUser] = useState(auth.currentUser)
+  const [debug, setDebug] = useState(false)
 
   const provider = new GoogleAuthProvider()
   const signIn = () => {
@@ -45,19 +51,32 @@ function Layout() {
 
   return (
     <div className="p-8 flex flex-col gap-4">
-      <>
-        {currentUser ? (
-          <div className="flex items-center gap-2">
-            <span>{currentUser.displayName}</span>
-            <Button variant="ghost" onClick={signOut}>
-              Signout
-            </Button>
-          </div>
-        ) : (
-          <Button onClick={signIn}>Signin</Button>
-        )}
-      </>
-      <Outlet />
+      <div className="flex justify-between">
+        <h1 className="text-xl">Tasks and Notes</h1>
+        <div className="flex items-center gap-2">
+          {currentUser ? (
+            <>
+              <div className="p-2 rounded border flex items-center gap-2">
+                <label htmlFor="isDebug">Debug</label>
+                <Switch
+                  id="isDebug"
+                  checked={debug}
+                  onCheckedChange={(checked) =>
+                    setDebug(checked ? true : false)
+                  }
+                />
+              </div>
+              <span>{currentUser.displayName}</span>
+              <Button variant="ghost" onClick={signOut}>
+                Signout
+              </Button>
+            </>
+          ) : (
+            <Button onClick={signIn}>Signin</Button>
+          )}
+        </div>
+      </div>
+      <Outlet context={{ isDebug: debug }} />
     </div>
   )
 }

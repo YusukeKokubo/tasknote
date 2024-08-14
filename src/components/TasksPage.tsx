@@ -20,8 +20,11 @@ import {
   TableRow,
 } from "./ui/table"
 import clsx from "clsx"
+import { useOutletContext } from "react-router-dom"
+import { LayoutOutletContext } from "./Layout"
 
 function TasksPage() {
+  const { isDebug } = useOutletContext<LayoutOutletContext>()
   const { data: tasks, isLoading } = useTasks()
 
   const [title, setTitle] = useState("")
@@ -47,7 +50,7 @@ function TasksPage() {
   return isLoading || !tasks ? (
     <div>Loading...</div>
   ) : (
-    <>
+    <form>
       <Table>
         <TableHeader>
           <TableRow>
@@ -76,6 +79,7 @@ function TasksPage() {
                 >
                   {task.title}
                 </span>
+                {isDebug && <span>[{task.uid}]</span>}
               </TableCell>
               <TableCell></TableCell>
             </TableRow>
@@ -113,7 +117,7 @@ function TasksPage() {
           </TableRow>
         </TableBody>
       </Table>
-    </>
+    </form>
   )
 }
 
