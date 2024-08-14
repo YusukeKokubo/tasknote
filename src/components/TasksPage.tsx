@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table"
+import clsx from "clsx"
 
 function TasksPage() {
   const { data: tasks, isLoading } = useTasks()
@@ -47,12 +48,12 @@ function TasksPage() {
           <TableRow>
             <TableHead></TableHead>
             <TableHead></TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {tasks.map((task) => (
             <TableRow key={task.uid}>
-              <TableCell>{task.title}</TableCell>
               <TableCell>
                 <Checkbox
                   checked={!!task.doneAt}
@@ -61,9 +62,21 @@ function TasksPage() {
                   }}
                 />
               </TableCell>
+              <TableCell>
+                <span
+                  className={clsx(
+                    task.doneAt && "line-through text-gray-500",
+                    "text-lg"
+                  )}
+                >
+                  {task.title}
+                </span>
+              </TableCell>
+              <TableCell></TableCell>
             </TableRow>
           ))}
           <TableRow>
+            <TableCell></TableCell>
             <TableCell className="p-1">
               <Input
                 type="text"
@@ -77,6 +90,7 @@ function TasksPage() {
                 onClick={() => {
                   add(title)
                 }}
+                disabled={!title}
               >
                 Add
               </Button>
