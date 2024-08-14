@@ -14,7 +14,9 @@ export const useTask = (uid: string | undefined) => {
 };
 
 export const useTasks = () => {
-	const tasks = useFirestore<Task[]>(query(collection(db, 'task'), where('archivedAt', '==', null), orderBy('createdAt', 'asc')));
+	const userId = auth.currentUser?.uid
+	if (!userId) throw new Error('User is not signed in');
+	const tasks = useFirestore<Task[]>(query(collection(db, 'task'), where('archivedAt', '==', null), where('userId', '==', userId), orderBy('createdAt', 'asc')));
 	return tasks;
 }
 

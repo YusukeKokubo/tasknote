@@ -52,21 +52,22 @@ function Layout() {
   return (
     <div className="p-8 flex flex-col gap-4">
       <div className="flex justify-between">
-        <h1 className="text-xl">Tasks and Notes</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl">Tasks and Notes</h1>
+          <div className="p-2 rounded border flex items-center gap-2">
+            <label htmlFor="isDebug">Debug</label>
+            <Switch
+              id="isDebug"
+              checked={debug}
+              onCheckedChange={(checked) => setDebug(checked ? true : false)}
+            />
+          </div>
+        </div>
         <div className="flex items-center gap-2">
           {currentUser ? (
             <>
-              <div className="p-2 rounded border flex items-center gap-2">
-                <label htmlFor="isDebug">Debug</label>
-                <Switch
-                  id="isDebug"
-                  checked={debug}
-                  onCheckedChange={(checked) =>
-                    setDebug(checked ? true : false)
-                  }
-                />
-              </div>
               <span>{currentUser.displayName}</span>
+              {debug && <span>[{currentUser.uid}]</span>}
               <Button variant="ghost" onClick={signOut}>
                 Signout
               </Button>
@@ -76,7 +77,7 @@ function Layout() {
           )}
         </div>
       </div>
-      <Outlet context={{ isDebug: debug }} />
+      {currentUser && <Outlet context={{ isDebug: debug }} />}
     </div>
   )
 }
