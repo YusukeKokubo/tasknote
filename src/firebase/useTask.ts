@@ -1,4 +1,4 @@
-import { db } from "@/main";
+import { auth, db } from "@/main";
 import { collection, doc, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { useFirestore } from "./useFirestore";
 
@@ -20,7 +20,7 @@ export const useTasks = () => {
 export const createNewTask = async (task: TaskData) => {
 	console.log('Save task', task);
 	const taskRef = doc(collection(db, 'task'));
-	setDoc(taskRef, { ...task, archivedAt: null, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+	setDoc(taskRef, { ...task, userId: auth.currentUser?.uid, archivedAt: null, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
 }
 
 export const doneTask = async (task: TaskDoneData) => {
