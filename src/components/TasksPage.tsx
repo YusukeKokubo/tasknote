@@ -27,7 +27,6 @@ import {
 function TasksPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
   const { data: tasks, isLoading } = useTasks()
-
   const [title, setTitle] = useState("")
 
   const add = (title: string) => {
@@ -56,6 +55,7 @@ function TasksPage() {
   const TaskRow: React.FC<{ task: Task }> = (props) => {
     const task = props.task
     const [editingTitle, setEditingTitle] = useState(task.title)
+    const formId = `TaskForm-${task.uid}`
     return (
       <TableRow key={task.uid}>
         <TableCell>
@@ -64,7 +64,7 @@ function TasksPage() {
             onCheckedChange={(checked) => {
               checked ? done(task) : undone(task)
             }}
-            form={`TaskForm-${task.uid}`}
+            form={formId}
           />
         </TableCell>
         <TableCell>
@@ -77,7 +77,7 @@ function TasksPage() {
               type="text"
               name="title"
               value={editingTitle}
-              form={`TaskForm-${task.uid}`}
+              form={formId}
               className="border-0 text-lg"
               onChange={(value) => {
                 setEditingTitle(value.target.value)
@@ -90,8 +90,11 @@ function TasksPage() {
           {task.title !== editingTitle && (
             <Button
               onClick={() => {
+                console.log("Update task", task.uid, editingTitle)
                 update(task.uid, editingTitle)
               }}
+              type="submit"
+              form={formId}
             >
               Update
             </Button>
@@ -153,9 +156,20 @@ function TasksPage() {
         </TableBody>
       </Table>
       {tasks.map((task) => (
-        <form key={task.uid} id={`TaskForm-${task.uid}`}></form>
+        <form
+          key={task.uid}
+          id={`TaskForm-${task.uid}`}
+          onSubmit={(e) => {
+            e.preventDefault()
+          }}
+        ></form>
       ))}
-      <form id="NewTaskForm"></form>
+      <form
+        id="NewTaskForm"
+        onSubmit={(e) => {
+          e.preventDefault()
+        }}
+      ></form>
     </>
   )
 }
