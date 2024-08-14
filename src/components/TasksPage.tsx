@@ -30,7 +30,6 @@ function TasksPage() {
   const [title, setTitle] = useState("")
 
   const add = (title: string) => {
-    console.log("Add task")
     const taskData: TaskData = { title }
     createNewTask(taskData)
     setTitle("")
@@ -90,7 +89,6 @@ function TasksPage() {
           {task.title !== editingTitle && (
             <Button
               onClick={() => {
-                console.log("Update task", task.uid, editingTitle)
                 update(task.uid, editingTitle)
               }}
               type="submit"

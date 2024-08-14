@@ -7,12 +7,6 @@ export type TaskData = Pick<Task, 'title'>
 export type TaskUpdateData = Pick<Task, 'uid' | 'title'>
 export type TaskDoneData = Pick<Task, 'uid'>
 
-export const useTask = (uid: string | undefined) => {
-	const fireUser = useFirestore<Task>(uid ? doc(collection(db, 'issues'), uid) : undefined);
-
-	return fireUser;
-};
-
 export const useTasks = () => {
 	const userId = auth.currentUser?.uid
 	if (!userId) throw new Error('User is not signed in');
@@ -21,7 +15,6 @@ export const useTasks = () => {
 }
 
 export const createNewTask = async (task: TaskData) => {
-	console.log('Save task', task);
 	const taskRef = doc(collection(db, 'task'));
 	setDoc(taskRef, { ...task, userId: auth.currentUser?.uid, archivedAt: null, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
 }
