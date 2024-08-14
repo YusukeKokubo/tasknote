@@ -3,11 +3,13 @@ import {
   doneTask,
   Task,
   TaskData,
-  TaskDoneData,
+  undoneTask,
   useTasks,
 } from "@/firebase/useTask"
 import { useState } from "react"
 import { Button } from "./ui/button"
+import { Checkbox } from "./ui/checkbox"
+import { Input } from "./ui/input"
 import {
   Table,
   TableBody,
@@ -16,8 +18,6 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table"
-import { Input } from "./ui/input"
-import { Checkbox } from "./ui/checkbox"
 
 function TasksPage() {
   const { data: tasks, isLoading } = useTasks()
@@ -32,14 +32,10 @@ function TasksPage() {
   }
 
   const done = (task: Task) => {
-    console.log("Done task")
-    const taskData: TaskDoneData = { uid: task.uid, doneAt: new Date() }
-    doneTask(taskData)
+    doneTask({ uid: task.uid })
   }
   const undone = (task: Task) => {
-    console.log("Undone task")
-    const taskData: TaskDoneData = { uid: task.uid, doneAt: null }
-    doneTask(taskData)
+    undoneTask({ uid: task.uid })
   }
 
   return isLoading || !tasks ? (

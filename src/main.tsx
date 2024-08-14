@@ -9,19 +9,6 @@ import Layout from "./components/Layout.tsx"
 import TasksPage from "./components/TasksPage.tsx"
 import './index.css'
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      {
-        index: true,
-        element: <TasksPage />,
-      },
-    ],
-  },
-])
-
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -42,6 +29,20 @@ if (import.meta.env.MODE === "development") {
 }
 
 export { auth, db, firebase }
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <TasksPage />,
+      },
+    ],
+  },
+])
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
