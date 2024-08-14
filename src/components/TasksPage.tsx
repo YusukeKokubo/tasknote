@@ -78,6 +78,7 @@ function TasksPage() {
               name="title"
               value={editingTitle}
               form={`TaskForm-${task.uid}`}
+              className="border-0 text-lg"
               onChange={(value) => {
                 setEditingTitle(value.target.value)
               }}
