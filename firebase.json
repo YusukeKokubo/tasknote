@@ -4,8 +4,8 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "site": "feedbacks365-a72c5",
-    "public": "public",
+    "site": "bibozu",
+    "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
   },
   "emulators": {
