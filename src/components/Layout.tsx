@@ -50,18 +50,10 @@ function Layout() {
   }, [])
 
   return (
-    <div className="p-8 flex flex-col gap-4">
+    <div className="p-2 md:p-8 flex flex-col gap-8">
       <div className="flex justify-between">
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl">Tasks and Notes</h1>
-          <div className="p-2 rounded border flex items-center gap-2">
-            <label htmlFor="isDebug">Debug</label>
-            <Switch
-              id="isDebug"
-              checked={debug}
-              onCheckedChange={(checked) => setDebug(checked ? true : false)}
-            />
-          </div>
+        <div className="flex flex-col md:flex-row items-center gap-2">
+          <h1 className="text-xl">Tasks&Notes</h1>
         </div>
         <div className="flex items-center gap-2">
           {currentUser ? (
@@ -78,6 +70,16 @@ function Layout() {
         </div>
       </div>
       {currentUser && <Outlet context={{ isDebug: debug }} />}
+      <div className="fixed right-2 bottom-10">
+        <div className="p-2 rounded border flex items-center gap-2">
+          <label htmlFor="isDebug">Debug</label>
+          <Switch
+            id="isDebug"
+            checked={debug}
+            onCheckedChange={(checked) => setDebug(checked ? true : false)}
+          />
+        </div>
+      </div>
     </div>
   )
 }

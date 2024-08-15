@@ -15,14 +15,6 @@ import { LayoutOutletContext } from "./Layout"
 import { Button } from "./ui/button"
 import { Checkbox } from "./ui/checkbox"
 import { Input } from "./ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table"
 
 function TasksPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
@@ -61,19 +53,17 @@ function TasksPage() {
     const [editingTitle, setEditingTitle] = useState(task.title)
     const formId = `TaskForm-${task.uid}`
     return (
-      <TableRow key={task.uid}>
-        <TableCell>
-          <Checkbox
-            checked={!!task.doneAt}
-            onCheckedChange={(checked) => {
-              checked ? done(task) : undone(task)
-            }}
-            form={formId}
-          />
-        </TableCell>
-        <TableCell>
+      <div className="flex items-center gap-2 border-b">
+        <Checkbox
+          checked={!!task.doneAt}
+          onCheckedChange={(checked) => {
+            checked ? done(task) : undone(task)
+          }}
+          form={formId}
+        />
+        <div className="flex flex-col gap-2 w-full">
           {task.doneAt ? (
-            <span className="line-through text-gray-500 text-lg">
+            <span className="line-through text-gray-500 text-lg py-2">
               {task.title}
             </span>
           ) : (
@@ -82,15 +72,13 @@ function TasksPage() {
               name="title"
               value={editingTitle}
               form={formId}
-              className="border-0 text-lg"
+              className="border-0 text-lg p-0"
               onChange={(value) => {
                 setEditingTitle(value.target.value)
               }}
             />
           )}
           {isDebug && <span>[{task.uid}]</span>}
-        </TableCell>
-        <TableCell>
           {task.title !== editingTitle && (
             <Button
               onClick={() => {
@@ -102,8 +90,8 @@ function TasksPage() {
               Update
             </Button>
           )}
-        </TableCell>
-      </TableRow>
+        </div>
+      </div>
     )
   }
 
@@ -111,53 +99,41 @@ function TasksPage() {
     <div>Loading...</div>
   ) : (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-1">Done</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead className="w-1"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tasks.map((task) => (
-            <TaskRow task={task} key={task.uid} />
-          ))}
-          {tasks.some((task) => !!task.doneAt) && (
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>
-                <Button variant="destructive" onClick={() => archive()}>
-                  Archive done tasks
-                </Button>
-              </TableCell>
-            </TableRow>
-          )}
-          <TableRow>
-            <TableCell></TableCell>
-            <TableCell className="p-1">
-              <Input
-                type="text"
-                name="title"
-                value={title}
-                form="NewTaskForm"
-                onChange={(value) => setTitle(value.target.value)}
-              />
-            </TableCell>
-            <TableCell>
-              <Button
-                form="NewTaskForm"
-                onClick={() => {
-                  add(title)
-                }}
-                disabled={!title}
-              >
-                Add
-              </Button>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+      <div className="flex flex-col gap-2">
+        {tasks.map((task) => (
+          <TaskRow task={task} key={task.uid} />
+        ))}
+      </div>
+      {tasks.some((task) => !!task.doneAt) && (
+        <div>
+          <Button
+            variant="destructive"
+            onClick={() => archive()}
+            className="w-full"
+          >
+            Archive done tasks
+          </Button>
+        </div>
+      )}
+      <div className="flex flex-col gap-2">
+        <Input
+          type="text"
+          name="title"
+          placeholder="New task"
+          value={title}
+          form="NewTaskForm"
+          onChange={(value) => setTitle(value.target.value)}
+        />
+        <Button
+          form="NewTaskForm"
+          onClick={() => {
+            add(title)
+          }}
+          disabled={!title}
+        >
+          Add
+        </Button>
+      </div>
       {tasks.map((task) => (
         <form
           key={task.uid}
