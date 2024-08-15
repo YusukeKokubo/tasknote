@@ -119,20 +119,23 @@ function TasksPage() {
         <Input
           type="text"
           name="title"
+          className="border-0 border-b text-lg rounded-none focus:rounded"
           placeholder="New task"
           value={title}
           form="NewTaskForm"
           onChange={(value) => setTitle(value.target.value)}
         />
-        <Button
-          form="NewTaskForm"
-          onClick={() => {
-            add(title)
-          }}
-          disabled={!title}
-        >
-          Add
-        </Button>
+        {title && (
+          <Button
+            form="NewTaskForm"
+            onClick={() => {
+              add(title)
+            }}
+            disabled={!title}
+          >
+            Add
+          </Button>
+        )}
       </div>
       {tasks.map((task) => (
         <form
