@@ -5,6 +5,14 @@ import { useEffect, useState } from "react"
 import { Outlet } from "react-router-dom"
 import { Button } from "./ui/button"
 import { Switch } from "./ui/switch"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "./ui/navigation-menu"
 
 export type LayoutOutletContext = {
   isDebug: boolean
@@ -51,18 +59,42 @@ function Layout() {
 
   return (
     <div className="p-2 md:p-8 flex flex-col gap-8">
-      <div className="flex justify-between">
-        <div className="flex flex-col md:flex-row items-center gap-2">
-          <h1 className="text-xl">Tasks&Notes</h1>
-        </div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-xl">Tasks&Notes</h1>
+
         <div className="flex items-center gap-2">
           {currentUser ? (
             <>
-              <span>{currentUser.displayName}</span>
-              {debug && <span>[{currentUser.uid}]</span>}
-              <Button variant="ghost" onClick={signOut}>
-                Signout
-              </Button>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>
+                      <div className="flex items-center gap-1">
+                        {currentUser.photoURL ? (
+                          <img
+                            src={currentUser.photoURL}
+                            alt={currentUser.displayName || "User"}
+                            className="w-8 h-8 rounded-full"
+                          />
+                        ) : (
+                          <span className="w-8 h-8 rounded-full bg-gray-300 block" />
+                        )}
+                        {currentUser.displayName}
+                      </div>
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="flex flex-col">
+                        {debug && <span>[{currentUser.uid}]</span>}
+                        <NavigationMenuLink>
+                          <Button variant="link" onClick={signOut}>
+                            Signout
+                          </Button>
+                        </NavigationMenuLink>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </>
           ) : (
             <Button onClick={signIn}>Signin</Button>
