@@ -26,8 +26,13 @@ import {
 
 function TasksPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
-  const { data: tasks, isLoading } = useTasks()
+  const { data: tasks, isLoading, error } = useTasks()
   const [title, setTitle] = useState("")
+
+  if (error) {
+    console.error(error)
+    return <div>Error: {error.message}</div>
+  }
 
   const add = (title: string) => {
     const taskData: TaskData = { title }
