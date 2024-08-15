@@ -12,6 +12,7 @@ export const timestampToDate = (timestamp: Timestamp) => {
 
 export const formatDoc = (doc: QueryDocumentSnapshot<DocumentData>) => {
 	const data = doc.data();
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const formatedData = { uid: doc.id, ...data } as any;
 
 	'createdAt' in data && (formatedData.createdAt = timestampToDate(data.createdAt));

@@ -62,7 +62,6 @@ export const useFirestore = <T>(
 			});
 		}
 		return unsubscribe;
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [JSON.stringify(docOrQuery)]);
 
 	return firestore;

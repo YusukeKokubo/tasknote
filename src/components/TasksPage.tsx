@@ -45,7 +45,9 @@ function TasksPage() {
   }
   const archive = () => {
     const doneTasks = tasks?.filter((task) => !!task.doneAt)
-    doneTasks && archiveDoneTasks(doneTasks)
+    if (doneTasks) {
+      archiveDoneTasks(doneTasks)
+    }
   }
 
   const TaskRow: React.FC<{ task: Task }> = (props) => {
@@ -57,7 +59,11 @@ function TasksPage() {
         <Checkbox
           checked={!!task.doneAt}
           onCheckedChange={(checked) => {
-            checked ? done(task) : undone(task)
+            if (checked) {
+              done(task)
+            } else {
+              undone(task)
+            }
           }}
           form={formId}
         />

@@ -18,8 +18,11 @@ export default [
     rules: {
       "react/react-in-jsx-scope": "off",
       "no-unused-vars": "error",
-      "no-undef": "error",
+      "no-undef": "off",
       "react-hooks/rules-of-hooks": "error",
+      "react/prop-types": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
     },
   },
 ]
