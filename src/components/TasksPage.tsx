@@ -19,7 +19,6 @@ import { Input } from "./ui/input"
 function TasksPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
   const { data: tasks, isLoading, error } = useTasks()
-  const [title, setTitle] = useState("")
 
   if (error) {
     console.error(error)
@@ -30,33 +29,21 @@ function TasksPage() {
     return <div>Loading...</div>
   }
 
-  const add = (title: string) => {
-    const taskData: TaskInsertData = { title }
-    createNewTask(taskData)
-    setTitle("")
-  }
-
-  const update = (uid: string, title: string) => {
-    const taskData: TaskUpdateData = { uid, title }
-    updateTask(taskData)
-  }
-
-  const done = (task: Task) => {
-    doneTask({ uid: task.uid })
-  }
-  const undone = (task: Task) => {
-    undoneTask({ uid: task.uid })
-  }
-  const archive = () => {
-    const doneTasks = tasks?.filter((task) => !!task.doneAt)
-    if (doneTasks) {
-      archiveDoneTasks(doneTasks)
-    }
-  }
-
   const TaskRow: React.FC<{ task: Task }> = (props) => {
     const task = props.task
     const [editingTitle, setEditingTitle] = useState(task.title)
+
+    const update = (uid: string, title: string) => {
+      const taskData: TaskUpdateData = { uid, title }
+      updateTask(taskData)
+    }
+
+    const done = (task: Task) => {
+      doneTask({ uid: task.uid })
+    }
+    const undone = (task: Task) => {
+      undoneTask({ uid: task.uid })
+    }
     return (
       <form
         key={task.uid}
@@ -109,6 +96,12 @@ function TasksPage() {
   }
 
   const ArchiveButton: React.FC = () => {
+    const archive = () => {
+      const doneTasks = tasks?.filter((task) => !!task.doneAt)
+      if (doneTasks) {
+        archiveDoneTasks(doneTasks)
+      }
+    }
     return (
       <Button
         variant="destructive"
@@ -121,6 +114,14 @@ function TasksPage() {
   }
 
   const NewTaskForm: React.FC = () => {
+    const [title, setTitle] = useState("")
+
+    const add = (title: string) => {
+      const taskData: TaskInsertData = { title }
+      createNewTask(taskData)
+      setTitle("")
+    }
+
     return (
       <form
         onSubmit={(e) => {
