@@ -26,6 +26,10 @@ function TasksPage() {
     return <div>Error: {error.message}</div>
   }
 
+  if (isLoading || !tasks) {
+    return <div>Loading...</div>
+  }
+
   const add = (title: string) => {
     const taskData: TaskData = { title }
     createNewTask(taskData)
@@ -53,111 +57,109 @@ function TasksPage() {
   const TaskRow: React.FC<{ task: Task }> = (props) => {
     const task = props.task
     const [editingTitle, setEditingTitle] = useState(task.title)
-    const formId = `TaskForm-${task.uid}`
     return (
-      <div className="flex items-center gap-2 border-b">
-        <Checkbox
-          checked={!!task.doneAt}
-          onCheckedChange={(checked) => {
-            if (checked) {
-              done(task)
-            } else {
-              undone(task)
-            }
-          }}
-          form={formId}
-        />
-        <div className="flex flex-col gap-2 w-full">
-          {task.doneAt ? (
-            <span className="line-through text-gray-500 text-lg py-2">
-              {task.title}
-            </span>
-          ) : (
-            <Input
-              type="text"
-              name="title"
-              value={editingTitle}
-              form={formId}
-              className="border-0 text-lg p-0"
-              onChange={(value) => {
-                setEditingTitle(value.target.value)
-              }}
-            />
-          )}
-          {isDebug && <span>[{task.uid}]</span>}
-          {task.title !== editingTitle && (
-            <Button
-              onClick={() => {
-                update(task.uid, editingTitle)
-              }}
-              type="submit"
-              form={formId}
-            >
-              Update
-            </Button>
-          )}
+      <form
+        key={task.uid}
+        onSubmit={(e) => {
+          e.preventDefault()
+        }}
+      >
+        <div className="flex items-center gap-2 border-b">
+          <Checkbox
+            checked={!!task.doneAt}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                done(task)
+              } else {
+                undone(task)
+              }
+            }}
+          />
+          <div className="flex flex-col gap-2 w-full">
+            {task.doneAt ? (
+              <span className="line-through text-gray-500 text-lg py-2">
+                {task.title}
+              </span>
+            ) : (
+              <Input
+                type="text"
+                name="title"
+                value={editingTitle}
+                className="border-0 text-lg p-0"
+                onChange={(value) => {
+                  setEditingTitle(value.target.value)
+                }}
+              />
+            )}
+            {isDebug && <span>[{task.uid}]</span>}
+            {task.title !== editingTitle && (
+              <Button
+                onClick={() => {
+                  update(task.uid, editingTitle)
+                }}
+                type="submit"
+              >
+                Update
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      </form>
     )
   }
 
-  return isLoading || !tasks ? (
-    <div>Loading...</div>
-  ) : (
+  const ArchiveButton: React.FC = () => {
+    return (
+      <Button
+        variant="destructive"
+        onClick={() => archive()}
+        className="w-full"
+      >
+        Archive done tasks
+      </Button>
+    )
+  }
+
+  const NewTaskForm: React.FC = () => {
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+        }}
+      >
+        <div className="flex flex-col gap-2">
+          <Input
+            type="text"
+            name="title"
+            className="border-0 border-b text-lg rounded-none focus:rounded"
+            placeholder="New task"
+            value={title}
+            onChange={(value) => setTitle(value.target.value)}
+          />
+          {title && (
+            <Button
+              onClick={() => {
+                add(title)
+              }}
+              disabled={!title}
+            >
+              Add
+            </Button>
+          )}
+        </div>
+      </form>
+    )
+  }
+
+  return (
     <>
       <div className="flex flex-col gap-2">
         {tasks.map((task) => (
           <TaskRow task={task} key={task.uid} />
         ))}
       </div>
-      {tasks.some((task) => !!task.doneAt) && (
-        <div>
-          <Button
-            variant="destructive"
-            onClick={() => archive()}
-            className="w-full"
-          >
-            Archive done tasks
-          </Button>
-        </div>
-      )}
-      <div className="flex flex-col gap-2">
-        <Input
-          type="text"
-          name="title"
-          className="border-0 border-b text-lg rounded-none focus:rounded"
-          placeholder="New task"
-          value={title}
-          form="NewTaskForm"
-          onChange={(value) => setTitle(value.target.value)}
-        />
-        {title && (
-          <Button
-            form="NewTaskForm"
-            onClick={() => {
-              add(title)
-            }}
-            disabled={!title}
-          >
-            Add
-          </Button>
-        )}
-      </div>
-      {tasks.map((task) => (
-        <form
-          key={task.uid}
-          id={`TaskForm-${task.uid}`}
-          onSubmit={(e) => {
-            e.preventDefault()
-          }}
-        ></form>
-      ))}
-      <form
-        id="NewTaskForm"
-        onSubmit={(e) => {
-          e.preventDefault()
-        }}
-      ></form>
+      {tasks.some((task) => !!task.doneAt) && <ArchiveButton />}
+      <NewTaskForm />
     </>
   )
 }
