@@ -3,7 +3,7 @@ import {
   createNewTask,
   doneTask,
   Task,
-  TaskData,
+  TaskInsertData,
   TaskUpdateData,
   undoneTask,
   updateTask,
@@ -31,7 +31,7 @@ function TasksPage() {
   }
 
   const add = (title: string) => {
-    const taskData: TaskData = { title }
+    const taskData: TaskInsertData = { title }
     createNewTask(taskData)
     setTitle("")
   }

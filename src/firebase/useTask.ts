@@ -3,7 +3,7 @@ import { collection, doc, orderBy, query, serverTimestamp, setDoc, where } from 
 import { useFirestore } from "./useFirestore";
 
 export type Task = { uid: string, userId: string, title: string, description: string, doneAt: Date | null, order: number };
-export type TaskData = Pick<Task, 'title'>
+export type TaskInsertData = Pick<Task, 'title'>
 export type TaskUpdateData = Pick<Task, 'uid' | 'title'>
 export type TaskDoneData = Pick<Task, 'uid'>
 
@@ -14,7 +14,7 @@ export const useTasks = () => {
 	return tasks;
 }
 
-export const createNewTask = async (task: TaskData) => {
+export const createNewTask = async (task: TaskInsertData) => {
 	const taskRef = doc(collection(db, 'task'));
 	setDoc(taskRef, { ...task, userId: auth.currentUser?.uid, archivedAt: null, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
 }
