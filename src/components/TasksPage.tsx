@@ -15,6 +15,7 @@ import { LayoutOutletContext } from "./Layout"
 import { Button } from "./ui/button"
 import { Checkbox } from "./ui/checkbox"
 import { Input } from "./ui/input"
+import { PlusCircleIcon } from "lucide-react"
 
 function TasksPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
@@ -51,7 +52,7 @@ function TasksPage() {
           e.preventDefault()
         }}
       >
-        <div className="flex items-center gap-2 border-b">
+        <div className="flex items-center gap-3 border-b">
           <Checkbox
             checked={!!task.doneAt}
             onCheckedChange={(checked) => {
@@ -130,14 +131,17 @@ function TasksPage() {
         }}
       >
         <div className="flex flex-col gap-2">
-          <Input
-            type="text"
-            name="title"
-            className="border-0 border-b text-lg rounded-none focus:rounded"
-            placeholder="New task"
-            value={title}
-            onChange={(value) => setTitle(value.target.value)}
-          />
+          <div className="flex items-center gap-2 border-b">
+            <PlusCircleIcon size={18} color="#666" />
+            <Input
+              type="text"
+              name="title"
+              className="border-0 text-lg px-1 rounded-none focus:rounded"
+              placeholder="New task"
+              value={title}
+              onChange={(value) => setTitle(value.target.value)}
+            />
+          </div>
           {title && (
             <Button
               onClick={() => {
@@ -154,15 +158,13 @@ function TasksPage() {
   }
 
   return (
-    <>
-      <div className="flex flex-col gap-2">
-        {tasks.map((task) => (
-          <TaskRow task={task} key={task.uid} />
-        ))}
-      </div>
+    <div className="flex flex-col gap-2">
+      {tasks.map((task) => (
+        <TaskRow task={task} key={task.uid} />
+      ))}
       {tasks.some((task) => !!task.doneAt) && <ArchiveButton />}
       <NewTaskForm />
-    </>
+    </div>
   )
 }
 
