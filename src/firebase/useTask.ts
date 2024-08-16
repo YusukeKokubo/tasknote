@@ -2,8 +2,8 @@ import { auth, db } from "@/main";
 import { collection, doc, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { useFirestore } from "./useFirestore";
 
-export type Task = { uid: string, userId: string, title: string, description: string, doneAt: Date | null, order: number };
-export type TaskInsertData = Pick<Task, 'title'>
+export type Task = { uid: string, userId: string, title: string, doneAt: Date | null, order: number };
+export type TaskInsertData = Pick<Task, 'title' | 'order'>
 export type TaskUpdateData = Pick<Task, 'uid' | 'title'>
 export type TaskDoneData = Pick<Task, 'uid'>
 

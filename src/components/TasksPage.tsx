@@ -117,7 +117,8 @@ function TasksPage() {
     const [title, setTitle] = useState("")
 
     const add = (title: string) => {
-      const taskData: TaskInsertData = { title }
+      const order = tasks.length + 1
+      const taskData: TaskInsertData = { title, order }
       createNewTask(taskData)
       setTitle("")
     }
