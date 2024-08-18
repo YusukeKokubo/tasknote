@@ -5,6 +5,7 @@ import TasksPage from "./TasksPage"
 import { AutosizeTextarea } from "./ui/autosize-textarea"
 import { useState } from "react"
 import { Button } from "./ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 
 function ListPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
@@ -22,27 +23,31 @@ function ListPage() {
   const ListCard: React.FC<{ list: List }> = ({ list }) => {
     const [editingNote, setEditingNote] = useState(list.note)
     return (
-      <div className="flex flex-col gap-4 border p-2 md:p-4 rounded-sm">
-        <h2 className="text-xl font-bold">{list.title}</h2>
-        {isDebug && `[${list.uid}]`}
-        <TasksPage list={list} />
-        <AutosizeTextarea
-          value={editingNote}
-          onChange={(e) => setEditingNote(e.target.value)}
-          placeholder="Note for the list"
-          className="text-lg mt-4"
-        />
-        {list.note !== editingNote && (
-          <Button
-            onClick={() => {
-              UpdateListNote({ uid: list.uid, note: editingNote })
-            }}
-            type="submit"
-          >
-            Update
-          </Button>
-        )}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{list.title}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {isDebug && <span className="text-gray-500">{list.uid}</span>}
+          <TasksPage list={list} />
+          <AutosizeTextarea
+            value={editingNote}
+            onChange={(e) => setEditingNote(e.target.value)}
+            placeholder="Note for the list"
+            className="text-lg mt-4"
+          />
+          {list.note !== editingNote && (
+            <Button
+              onClick={() => {
+                UpdateListNote({ uid: list.uid, note: editingNote })
+              }}
+              type="submit"
+            >
+              Update
+            </Button>
+          )}
+        </CardContent>
+      </Card>
     )
   }
 
