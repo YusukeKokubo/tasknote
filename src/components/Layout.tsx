@@ -14,6 +14,8 @@ import {
   NavigationMenuTrigger,
 } from "./ui/navigation-menu"
 import { createNewList, getListCount } from "@/firebase/useTask"
+import { VStack } from "./ui/v-stack"
+import { HStack } from "./ui/h-stack"
 
 export type LayoutOutletContext = {
   isDebug: boolean
@@ -66,18 +68,18 @@ function Layout() {
   }, [])
 
   return (
-    <div className="p-2 md:p-4 flex flex-col gap-8">
+    <VStack gap="lg" className="p-2 md:p-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl">bibozu</h1>
 
-        <div className="flex items-center gap-2">
+        <HStack gap="sm">
           {currentUser ? (
             <>
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
                     <NavigationMenuTrigger>
-                      <div className="flex items-center gap-1">
+                      <HStack gap="sm">
                         {currentUser.photoURL ? (
                           <img
                             src={currentUser.photoURL}
@@ -88,17 +90,17 @@ function Layout() {
                           <span className="w-8 h-8 rounded-full bg-gray-300 block" />
                         )}
                         {currentUser.displayName}
-                      </div>
+                      </HStack>
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="flex flex-col">
+                      <VStack gap="sm">
                         {debug && <span>[{currentUser.uid}]</span>}
                         <NavigationMenuLink>
                           <Button variant="link" onClick={signOut}>
                             Signout
                           </Button>
                         </NavigationMenuLink>
-                      </div>
+                      </VStack>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                 </NavigationMenuList>
@@ -107,20 +109,20 @@ function Layout() {
           ) : (
             <Button onClick={signIn}>Signin</Button>
           )}
-        </div>
+        </HStack>
       </div>
       {currentUser && <Outlet context={{ isDebug: debug }} />}
       <div className="fixed right-2 bottom-10">
-        <div className="p-2 rounded border flex items-center gap-2">
+        <HStack gap="sm" className="p-2 rounded border">
           <label htmlFor="isDebug">Debug</label>
           <Switch
             id="isDebug"
             checked={debug}
             onCheckedChange={(checked) => setDebug(checked ? true : false)}
           />
-        </div>
+        </HStack>
       </div>
-    </div>
+    </VStack>
   )
 }
 

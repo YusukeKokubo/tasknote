@@ -17,6 +17,8 @@ import { LayoutOutletContext } from "./Layout"
 import { Button } from "./ui/button"
 import { Checkbox } from "./ui/checkbox"
 import { Input } from "./ui/input"
+import { VStack } from "./ui/v-stack"
+import { HStack } from "./ui/h-stack"
 
 const TasksPage: React.FC<{ list: List }> = ({ list }) => {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
@@ -53,7 +55,7 @@ const TasksPage: React.FC<{ list: List }> = ({ list }) => {
           e.preventDefault()
         }}
       >
-        <div className="flex items-center gap-3 border-b">
+        <HStack gap="sm" className="border-b">
           <Checkbox
             checked={!!task.doneAt}
             onCheckedChange={(checked) => {
@@ -64,7 +66,7 @@ const TasksPage: React.FC<{ list: List }> = ({ list }) => {
               }
             }}
           />
-          <div className="flex flex-col gap-2 w-full">
+          <VStack gap="sm" className="w-full">
             {task.doneAt ? (
               <span className="line-through text-gray-500 text-lg py-2">
                 {task.title}
@@ -91,8 +93,8 @@ const TasksPage: React.FC<{ list: List }> = ({ list }) => {
                 Update
               </Button>
             )}
-          </div>
-        </div>
+          </VStack>
+        </HStack>
       </form>
     )
   }
@@ -132,8 +134,8 @@ const TasksPage: React.FC<{ list: List }> = ({ list }) => {
           e.preventDefault()
         }}
       >
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2 border-b">
+        <VStack gap="sm">
+          <HStack gap="sm" className="border-b">
             <PlusCircleIcon size={18} color="#666" />
             <Input
               type="text"
@@ -143,7 +145,7 @@ const TasksPage: React.FC<{ list: List }> = ({ list }) => {
               value={title}
               onChange={(value) => setTitle(value.target.value)}
             />
-          </div>
+          </HStack>
           {title && (
             <Button
               onClick={() => {
@@ -154,20 +156,20 @@ const TasksPage: React.FC<{ list: List }> = ({ list }) => {
               Add
             </Button>
           )}
-        </div>
+        </VStack>
       </form>
     )
   }
 
   return (
     <>
-      <div className="flex flex-col gap-2">
+      <VStack gap="sm">
         {tasks.map((task) => (
           <TaskRow task={task} key={task.uid} />
         ))}
         {tasks.some((task) => !!task.doneAt) && <ArchiveButton />}
         <NewTaskForm />
-      </div>
+      </VStack>
     </>
   )
 }
