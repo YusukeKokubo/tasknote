@@ -5,7 +5,14 @@ import TasksPage from "./TasksPage"
 import { AutosizeTextarea } from "./ui/autosize-textarea"
 import { useState } from "react"
 import { Button } from "./ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card"
 
 function ListPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
@@ -24,29 +31,35 @@ function ListPage() {
     const [editingNote, setEditingNote] = useState(list.note)
     return (
       <Card>
-        <CardHeader>
+        <CardHeader className="bg-gray-50">
           <CardTitle>{list.title}</CardTitle>
+          <CardDescription>
+            {isDebug && <span className="text-gray-500">{list.uid}</span>}
+          </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {isDebug && <span className="text-gray-500">{list.uid}</span>}
+        <CardContent className="pt-4">
           <TasksPage list={list} />
-          <AutosizeTextarea
-            value={editingNote}
-            onChange={(e) => setEditingNote(e.target.value)}
-            placeholder="Note for the list"
-            className="text-lg mt-4"
-          />
-          {list.note !== editingNote && (
-            <Button
-              onClick={() => {
-                UpdateListNote({ uid: list.uid, note: editingNote })
-              }}
-              type="submit"
-            >
-              Update
-            </Button>
-          )}
         </CardContent>
+        <CardFooter>
+          <form className="w-full flex flex-col gap-2">
+            <AutosizeTextarea
+              value={editingNote}
+              onChange={(e) => setEditingNote(e.target.value)}
+              placeholder="Note for the list"
+              className="text-lg"
+            />
+            {list.note !== editingNote && (
+              <Button
+                onClick={() => {
+                  UpdateListNote({ uid: list.uid, note: editingNote })
+                }}
+                type="submit"
+              >
+                Update
+              </Button>
+            )}
+          </form>
+        </CardFooter>
       </Card>
     )
   }
