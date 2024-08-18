@@ -1,9 +1,14 @@
-import { List, UpdateListNote, useLists } from "@/firebase/useTask"
+import {
+  List,
+  UpdateListNote,
+  UpdateListTitle,
+  useLists,
+} from "@/firebase/useTask"
 import { useOutletContext } from "react-router-dom"
 import { LayoutOutletContext } from "./Layout"
 import TasksPage from "./TasksPage"
 import { AutosizeTextarea } from "./ui/autosize-textarea"
-import { useState } from "react"
+import { useId, useState } from "react"
 import { Button } from "./ui/button"
 import {
   Card,
@@ -13,6 +18,8 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card"
+import { Input } from "./ui/input"
+import { VStack } from "./ui/v-stack"
 
 function ListPage() {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
@@ -28,39 +35,67 @@ function ListPage() {
   }
 
   const ListCard: React.FC<{ list: List }> = ({ list }) => {
+    const [editingTitle, setEditingTitle] = useState(list.title)
     const [editingNote, setEditingNote] = useState(list.note)
+    const titleFormId = useId()
+    const noteFormId = useId()
     return (
-      <Card>
-        <CardHeader className="bg-gray-50">
-          <CardTitle>{list.title}</CardTitle>
-          <CardDescription>
-            {isDebug && <span className="text-gray-500">{list.uid}</span>}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <TasksPage list={list} />
-        </CardContent>
-        <CardFooter>
-          <form className="w-full flex flex-col gap-2">
-            <AutosizeTextarea
-              value={editingNote}
-              onChange={(e) => setEditingNote(e.target.value)}
-              placeholder="Note for the list"
-              className="text-lg"
-            />
-            {list.note !== editingNote && (
-              <Button
-                onClick={() => {
-                  UpdateListNote({ uid: list.uid, note: editingNote })
-                }}
-                type="submit"
-              >
-                Update
-              </Button>
-            )}
-          </form>
-        </CardFooter>
-      </Card>
+      <div>
+        <form id={titleFormId} onSubmit={(e) => e.preventDefault()} />
+        <form id={noteFormId} onSubmit={(e) => e.preventDefault()} />
+        <Card>
+          <CardHeader className="bg-gray-100">
+            <CardTitle>
+              <VStack gap="sm">
+                <Input
+                  value={editingTitle}
+                  onChange={(e) => setEditingTitle(e.target.value)}
+                  className="text-2xl border-0 bg-transparent p-0 h-max"
+                  form={titleFormId}
+                />
+                {list.title !== editingTitle && (
+                  <Button
+                    onClick={() => {
+                      UpdateListTitle({ uid: list.uid, title: editingTitle })
+                    }}
+                    form={titleFormId}
+                  >
+                    Update
+                  </Button>
+                )}
+              </VStack>
+            </CardTitle>
+            <CardDescription>
+              {isDebug && <span className="text-gray-500">{list.uid}</span>}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <TasksPage list={list} />
+          </CardContent>
+          <CardFooter>
+            <VStack gap="sm" className="w-full">
+              <AutosizeTextarea
+                value={editingNote}
+                onChange={(e) => setEditingNote(e.target.value)}
+                placeholder="Note for the list"
+                className="text-lg"
+                form={noteFormId}
+              />
+              {list.note !== editingNote && (
+                <Button
+                  onClick={() => {
+                    UpdateListNote({ uid: list.uid, note: editingNote })
+                  }}
+                  type="submit"
+                  form={noteFormId}
+                >
+                  Update
+                </Button>
+              )}
+            </VStack>
+          </CardFooter>
+        </Card>
+      </div>
     )
   }
 
