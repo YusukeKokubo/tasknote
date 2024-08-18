@@ -14,7 +14,6 @@ import { PlusCircleIcon } from "lucide-react"
 import { useState } from "react"
 import { useOutletContext } from "react-router-dom"
 import { LayoutOutletContext } from "./Layout"
-import { AutosizeTextarea } from "./ui/autosize-textarea"
 import { Button } from "./ui/button"
 import { Checkbox } from "./ui/checkbox"
 import { Input } from "./ui/input"
@@ -169,10 +168,6 @@ const TasksPage: React.FC<{ list: List }> = ({ list }) => {
         {tasks.some((task) => !!task.doneAt) && <ArchiveButton />}
         <NewTaskForm />
       </div>
-      <AutosizeTextarea
-        placeholder="Note for the list"
-        className="text-lg mt-4"
-      />
     </>
   )
 }

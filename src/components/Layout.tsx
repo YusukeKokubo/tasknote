@@ -35,7 +35,7 @@ function Layout() {
           if (listCount.data().count === 0) {
             console.log("No list found. Create a new list.")
           }
-          createNewList({ title: "Inbox", note: "", order: 0 })
+          createNewList({ title: "Inbox", order: 0 })
         })()
       })
       .catch((error: FirebaseError) => {

@@ -8,8 +8,8 @@ export type TaskUpdateData = Pick<Task, 'uid' | 'title'>
 export type TaskDoneData = Pick<Task, 'uid'>
 
 export type List = { uid: string, userId: string, title: string, note: string, order: number };
-export type ListInsertData = Pick<List, 'title' | 'note' | 'order'>
-export type ListUpdateData = Pick<List, 'uid' | 'title' | 'note'>
+export type ListInsertData = Pick<List, 'title' | 'order'>
+export type ListUpdateNoteData = Pick<List, 'uid' | 'note'>
 
 export const useTasks = (listId: List['uid']) => {
 	const userId = auth.currentUser?.uid
@@ -63,4 +63,9 @@ export const createNewList = async (list: ListInsertData) => {
 	const listRef = doc(collection(db, 'list'));
 	if (!auth.currentUser) throw new Error('User is not signed in');
 	setDoc(listRef, { ...list, userId: auth.currentUser.uid, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+}
+
+export const UpdateListNote = async (list: ListUpdateNoteData) => {
+	const listRef = doc(collection(db, 'list'), list.uid);
+	setDoc(listRef, { ...list, updatedAt: serverTimestamp() }, { merge: true });
 }
