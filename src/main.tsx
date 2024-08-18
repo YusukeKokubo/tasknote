@@ -6,8 +6,8 @@ import React from "react"
 import ReactDOM from "react-dom/client"
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Layout from "./components/Layout.tsx"
-import TasksPage from "./components/TasksPage.tsx"
-import './index.css'
+import "./index.css"
+import ListPage from "./components/ListPage.tsx"
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -30,7 +30,6 @@ if (import.meta.env.MODE === "development") {
 
 export { auth, db, firebase }
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,7 +37,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <TasksPage />,
+        element: <ListPage />,
       },
     ],
   },

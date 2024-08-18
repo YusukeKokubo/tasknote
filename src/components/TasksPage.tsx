@@ -2,6 +2,7 @@ import {
   archiveDoneTasks,
   createNewTask,
   doneTask,
+  List,
   Task,
   TaskInsertData,
   TaskUpdateData,
@@ -9,17 +10,18 @@ import {
   updateTask,
   useTasks,
 } from "@/firebase/useTask"
+import { PlusCircleIcon } from "lucide-react"
 import { useState } from "react"
 import { useOutletContext } from "react-router-dom"
 import { LayoutOutletContext } from "./Layout"
+import { AutosizeTextarea } from "./ui/autosize-textarea"
 import { Button } from "./ui/button"
 import { Checkbox } from "./ui/checkbox"
 import { Input } from "./ui/input"
-import { PlusCircleIcon } from "lucide-react"
 
-function TasksPage() {
+const TasksPage: React.FC<{ list: List }> = ({ list }) => {
   const { isDebug } = useOutletContext<LayoutOutletContext>()
-  const { data: tasks, isLoading, error } = useTasks()
+  const { data: tasks, isLoading, error } = useTasks(list.uid)
 
   if (error) {
     console.error(error)
@@ -119,7 +121,8 @@ function TasksPage() {
 
     const add = (title: string) => {
       const order = tasks.length + 1
-      const taskData: TaskInsertData = { title, order }
+      const listId = list.uid
+      const taskData: TaskInsertData = { title, listId, order }
       createNewTask(taskData)
       setTitle("")
     }
@@ -158,13 +161,19 @@ function TasksPage() {
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {tasks.map((task) => (
-        <TaskRow task={task} key={task.uid} />
-      ))}
-      {tasks.some((task) => !!task.doneAt) && <ArchiveButton />}
-      <NewTaskForm />
-    </div>
+    <>
+      <div className="flex flex-col gap-2">
+        {tasks.map((task) => (
+          <TaskRow task={task} key={task.uid} />
+        ))}
+        {tasks.some((task) => !!task.doneAt) && <ArchiveButton />}
+        <NewTaskForm />
+      </div>
+      <AutosizeTextarea
+        placeholder="Note for the list"
+        className="text-lg mt-4"
+      />
+    </>
   )
 }
 

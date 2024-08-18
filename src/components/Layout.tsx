@@ -13,6 +13,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./ui/navigation-menu"
+import { createNewList, getListCount } from "@/firebase/useTask"
 
 export type LayoutOutletContext = {
   isDebug: boolean
@@ -29,6 +30,13 @@ function Layout() {
         const user = result.user
         setCurrentUser(user)
         console.log(user.email)
+        ;(async () => {
+          const listCount = await getListCount(user.uid)
+          if (listCount.data().count === 0) {
+            console.log("No list found. Create a new list.")
+          }
+          createNewList({ title: "Inbox", note: "", order: 0 })
+        })()
       })
       .catch((error: FirebaseError) => {
         const errorCode = error.code
@@ -58,7 +66,7 @@ function Layout() {
   }, [])
 
   return (
-    <div className="p-2 md:p-8 flex flex-col gap-8">
+    <div className="p-2 md:p-4 flex flex-col gap-8">
       <div className="flex justify-between items-center">
         <h1 className="text-xl">Tasks&Notes</h1>
 

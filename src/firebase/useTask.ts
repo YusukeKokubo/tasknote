@@ -1,16 +1,20 @@
 import { auth, db } from "@/main";
-import { collection, doc, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
+import { collection, doc, getCountFromServer, orderBy, query, serverTimestamp, setDoc, where } from "firebase/firestore";
 import { useFirestore } from "./useFirestore";
 
-export type Task = { uid: string, userId: string, title: string, doneAt: Date | null, order: number };
-export type TaskInsertData = Pick<Task, 'title' | 'order'>
+export type Task = { uid: string, userId: string, listId: string, title: string, doneAt: Date | null, order: number };
+export type TaskInsertData = Pick<Task, 'listId' | 'title' | 'order'>
 export type TaskUpdateData = Pick<Task, 'uid' | 'title'>
 export type TaskDoneData = Pick<Task, 'uid'>
 
-export const useTasks = () => {
+export type List = { uid: string, userId: string, title: string, note: string, order: number };
+export type ListInsertData = Pick<List, 'title' | 'note' | 'order'>
+export type ListUpdateData = Pick<List, 'uid' | 'title' | 'note'>
+
+export const useTasks = (listId: List['uid']) => {
 	const userId = auth.currentUser?.uid
 	if (!userId) throw new Error('User is not signed in');
-	const tasks = useFirestore<Task[]>(query(collection(db, 'task'), where('archivedAt', '==', null), where('userId', '==', userId), orderBy('createdAt', 'asc')));
+	const tasks = useFirestore<Task[]>(query(collection(db, 'task'), where('listId', '==', listId), where('archivedAt', '==', null), where('userId', '==', userId), orderBy('createdAt', 'asc')));
 	return tasks;
 }
 
@@ -39,4 +43,24 @@ export const archiveDoneTasks = async (doneTasks: TaskDoneData[]) => {
 		const taskRef = doc(collection(db, 'task'), task.uid);
 		setDoc(taskRef, { archivedAt: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true });
 	})
+}
+
+// List
+
+export const useLists = () => {
+	const userId = auth.currentUser?.uid
+	if (!userId) throw new Error('User is not signed in');
+	const lists = useFirestore<List[]>(query(collection(db, 'list'), where('userId', '==', userId), orderBy('order', 'asc')));
+	return lists;
+}
+
+export const getListCount = (userId: string) => {
+	const lists = getCountFromServer(query(collection(db, 'list'), where('userId', '==', userId)));
+	return lists
+}
+
+export const createNewList = async (list: ListInsertData) => {
+	const listRef = doc(collection(db, 'list'));
+	if (!auth.currentUser) throw new Error('User is not signed in');
+	setDoc(listRef, { ...list, userId: auth.currentUser.uid, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
 }
